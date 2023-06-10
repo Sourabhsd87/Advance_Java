@@ -9,11 +9,14 @@ public class UserDaoImpl implements UserDao {
 	// fields
 	private Connection cn;
 	private PreparedStatement pst1;
+	private PreparedStatement pst2;
 
 	public UserDaoImpl() throws SQLException {
 		// open conn
 		cn = openConnection();
 		pst1 = cn.prepareStatement("select * from users where email=? and password=?");
+		//id | first_name | last_name | email | password | dob | status | role
+		pst2 = cn.prepareStatement("insert into users values(default,?,?,?,?,?,?,?)");
 		System.out.println("user dao created!");
 	}
 
@@ -39,6 +42,30 @@ public class UserDaoImpl implements UserDao {
 			pst1.close();
 		closeConnection();
 		System.out.println("user dao cleaned up!");
+	}
+
+	@Override
+	public String RegisterUser(String Fname,String Lname,String email,String password,Date dob,String role) throws SQLException {
+		System.out.println("in user reg");
+		pst2.setString(1, Fname);
+		pst2.setString(2, Lname);
+		pst2.setString(3, email);
+		pst2.setString(4, password);
+		pst2.setDate(5,dob);
+		pst2.setInt(6,0);
+		pst2.setString(7, role);
+		
+		System.out.println("before execute update");
+
+		 int rst2 = pst2.executeUpdate();
+		
+		System.out.println("lkjhgfds");
+//		if(rst2==0) {
+//			return "Error in registering User.";
+//		}
+		return "Successfully registered";
+			
+		
 	}
 
 }
